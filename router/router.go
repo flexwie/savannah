@@ -10,7 +10,7 @@ var router *mux.Router
 func init() {
 	router = mux.NewRouter()
 
-	router.HandleFunc("/webhook/{id}", routes.ReceiveWebhook)
+	router.HandleFunc("/webhook/github/{id}", routes.ReceiveGithubWebhook)
 }
 
 func GetRouter() *mux.Router {
