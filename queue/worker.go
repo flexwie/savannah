@@ -2,14 +2,27 @@ package queue
 
 import (
 	"fmt"
-	"time"
+
+	"github.com/go-git/go-git/storage/memory"
+	"github.com/go-git/go-git/v5"
 )
 
 type WebhookJob struct {
-	ID string
+	ID         string
+	Repository string
+	Branch     string
+	Folder     string
 }
 
 func (t *WebhookJob) Process() {
-	fmt.Printf("processing: %s \n", t.ID)
-	time.Sleep(1 * time.Second)
+	fmt.Printf("Processing incoming webhook: %s\n", t.ID)
+
+	r, err := git.Clone(memory.NewStorage(), nil, &git.CloneOptions{
+		URL: t.Repository,
+	})
+
+	if err != nil {
+		return
+	}
+
 }

@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"felixwie.com/savannah/config"
 	q "felixwie.com/savannah/queue"
 	"github.com/gorilla/mux"
 )
@@ -184,10 +185,22 @@ func ReceiveGithubWebhook(w http.ResponseWriter, r *http.Request) {
 	}
 
 	vars := mux.Vars(r)
+
+	sourceConfig, err := config.GetRepositoryConfig(data.Repository.Name)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
 	w.WriteHeader(http.StatusOK)
 
 	queue := q.GetQueue()
-	queue.Submit(&q.WebhookJob{ID: data.Rule.CreatedAt.String()})
+	queue.Submit(&q.WebhookJob{
+		ID:         data.Rule.CreatedAt.String(),
+		Repository: sourceConfig.Name,
+		Branch:     sourceConfig.Branch,
+		Folder:     sourceConfig.Folder,
+	})
 
 	log.Printf("ID: %#v", vars)
 }
