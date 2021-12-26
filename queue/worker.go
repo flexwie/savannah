@@ -1,10 +1,14 @@
 package queue
 
 import (
-	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
+	"path"
+	"strings"
 
-	"github.com/go-git/go-git/storage/memory"
-	"github.com/go-git/go-git/v5"
+	"felixwie.com/savannah/nomad"
+	"gopkg.in/src-d/go-git.v4"
 )
 
 type WebhookJob struct {
@@ -15,14 +19,56 @@ type WebhookJob struct {
 }
 
 func (t *WebhookJob) Process() {
-	fmt.Printf("Processing incoming webhook: %s\n", t.ID)
+	log.Printf("Processing incoming request: %s\n", t.ID)
 
-	r, err := git.Clone(memory.NewStorage(), nil, &git.CloneOptions{
-		URL: t.Repository,
+	getContent(t.Repository, t.ID)
+	walkDir(t.ID + "/" + t.Folder)
+
+	defer os.RemoveAll(t.ID)
+}
+
+func getContent(url string, id string) {
+	log.Println("creating temp directory")
+	err := os.Mkdir(id, 0755)
+	checkError(err)
+
+	log.Printf("cloning repository %s", url)
+	_, err = git.PlainClone(id, false, &git.CloneOptions{
+		URL: url,
 	})
+	checkError(err)
+}
 
-	if err != nil {
-		return
+func walkDir(dir string) {
+	files, err := ioutil.ReadDir(dir)
+	checkError(err)
+
+	for _, f := range files {
+		if strings.HasSuffix(f.Name(), ".nomad") {
+			log.Printf("processing file: %s", f.Name())
+
+			decFile, err := os.ReadFile(path.Join(dir, f.Name()))
+			checkError(err)
+
+			dispatchFromHCL(string(decFile))
+		}
 	}
+}
 
+func dispatchFromHCL(data string) {
+	client := nomad.GetClient()
+
+	job, err := client.Jobs().ParseHCL(data, true)
+	checkError(err)
+
+	response, _, err := client.Jobs().Register(job, nil)
+	checkError(err)
+
+	log.Printf("adding job %v", response)
+}
+
+func checkError(err error) {
+	if err != nil {
+		log.Printf("error: %v", err)
+	}
 }
