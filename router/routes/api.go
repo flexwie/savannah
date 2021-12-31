@@ -14,6 +14,12 @@ type SyncPayload struct {
 	Name   string `json:"name"`
 }
 
+var Cfg config.Config
+
+func init() {
+	Cfg = config.GetConfig()
+}
+
 func SyncRepository(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	var data SyncPayload
@@ -39,4 +45,14 @@ func SyncRepository(w http.ResponseWriter, r *http.Request) {
 	})
 
 	w.WriteHeader(http.StatusOK)
+}
+
+func GetRepositories(w http.ResponseWriter, r *http.Request) {
+	data, err := json.Marshal(Cfg.Source)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(data)
 }

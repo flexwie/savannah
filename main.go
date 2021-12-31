@@ -27,7 +27,7 @@ func main() {
 			IndexPath:  "index.html",
 		}
 
-		r.PathPrefix("/").Handler(spa)
+		r.PathPrefix("/ui").Handler(spa)
 	}
 
 	log.Printf("api listening on port %d", cfg.Port)

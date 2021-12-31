@@ -12,6 +12,7 @@ func init() {
 
 	router.HandleFunc("/webhook/github/{id}", routes.ReceiveGithubWebhook)
 	router.HandleFunc("/api/sync", routes.SyncRepository)
+	router.HandleFunc("/api/repositories", routes.GetRepositories)
 }
 
 func GetRouter() *mux.Router {

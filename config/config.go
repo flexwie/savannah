@@ -17,24 +17,29 @@ type Config struct {
 }
 
 type Source struct {
-	Name   string `hcl:"name"`
-	Branch string `hcl:"branch"`
-	Folder string `hcl:"folder"`
-	URL    string `hcl:"url"`
+	Name   string `hcl:"name" json:"name"`
+	Branch string `hcl:"branch" json:"branch"`
+	Folder string `hcl:"folder" json:"folder"`
+	URL    string `hcl:"url" json:"url"`
 }
 
 var cfg Config
 
 func init() {
 	pflag.Int("port", 8080, "api server port")
-	pflag.String("conf", ".", "config file path")
+	pflag.String("conf", "./config.hcl", "config file path")
 	pflag.Parse()
 
 	v, _ := pflag.CommandLine.GetString("conf")
 	log.Printf("reading config from: %#v", v)
 
 	if err := hclsimple.DecodeFile(v, nil, &cfg); err != nil {
-		log.Fatalf("error reading config: %v", err)
+		log.Printf("error reading config: %v", err)
+		cfg.DataDir = "/data"
+		cfg.NomadAddress = "http://localhost:4646"
+		cfg.Port = 8080
+		cfg.Ui = true
+		cfg.Source = []Source{}
 	}
 }
 

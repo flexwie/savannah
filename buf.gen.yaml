@@ -1,0 +1,19 @@
+version: v1
+plugins:
+  - name: go
+    out: .
+    opt: module=felixwie.com/savannah
+  - name: go-grpc
+    out: .
+    opt: module=felixwie.com/savannah
+  #- name: protoc-gen-validate
+  #  out: .
+  #  opt: module=felixwie.com/savannah
+  - name: grpc-gateway
+    out: .
+    opt:
+      - module=felixwie.com/savannah
+      - generate_unbound_methods=true
+
+  - name: openapiv2
+    out: docs
