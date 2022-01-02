@@ -1,6 +1,6 @@
 module felixwie.com/savannah
 
-go 1.17
+go 1.18
 
 require (
 	github.com/envoyproxy/protoc-gen-validate v0.6.2

@@ -8,6 +8,7 @@ import (
 
 	"felixwie.com/savannah/config"
 	q "felixwie.com/savannah/queue"
+	"felixwie.com/savannah/queue/worker"
 	"github.com/gorilla/mux"
 )
 
@@ -195,7 +196,7 @@ func ReceiveGithubWebhook(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 
 	queue := q.GetQueue()
-	queue.Submit(&q.WebhookJob{
+	queue.Submit(&worker.WebhookJob{
 		ID:         data.Rule.CreatedAt.String(),
 		Repository: sourceConfig.Name,
 		Branch:     sourceConfig.Branch,

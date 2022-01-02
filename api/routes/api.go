@@ -6,6 +6,7 @@ import (
 
 	"felixwie.com/savannah/config"
 	q "felixwie.com/savannah/queue"
+	"felixwie.com/savannah/queue/worker"
 	"github.com/google/uuid"
 )
 
@@ -37,7 +38,7 @@ func SyncRepository(w http.ResponseWriter, r *http.Request) {
 	}
 
 	queue := q.GetQueue()
-	queue.Submit(&q.WebhookJob{
+	queue.Submit(&worker.WebhookJob{
 		ID:         uuid.New().String(),
 		Repository: sourceConfig.URL,
 		Branch:     sourceConfig.Branch,

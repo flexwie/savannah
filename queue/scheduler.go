@@ -3,6 +3,8 @@ package queue
 import (
 	"log"
 	"time"
+
+	"felixwie.com/savannah/queue/worker"
 )
 
 type Scheduler struct {
@@ -14,7 +16,7 @@ type Ticker struct {
 	quit   chan bool
 }
 
-func (s *Scheduler) Every(job *PollingJob, interval time.Duration) error {
+func (s *Scheduler) Every(job *worker.PollingJob, interval time.Duration) error {
 	t := time.NewTicker(interval)
 
 	ticker := &Ticker{

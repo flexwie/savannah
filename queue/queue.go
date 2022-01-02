@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"felixwie.com/savannah/config"
+	"felixwie.com/savannah/queue/worker"
 	"github.com/google/uuid"
 )
 
@@ -43,7 +44,7 @@ func init() {
 	for _, s := range cfg {
 		if s.Polling != nil {
 			log.Printf("adding polling worker for %s", s.Name)
-			scheduler.Every(&PollingJob{
+			scheduler.Every(&worker.PollingJob{
 				ID:         uuid.NewString(),
 				Repository: s.URL,
 				Branch:     s.Branch,
