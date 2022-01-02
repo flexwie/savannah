@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package api;
+option go_package = 'felixwie.com/savannah/internal/proto/api';
+
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "validate/validate.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+    info: {
+        title: "Savannah";
+        version: "1.0";
+    };
+    external_docs: {
+        url: "https://github.com/flexwie/savannah";
+        description: "Repository on GitHub";
+    };
+    schemes: [HTTP, HTTPS];
+    consumes: "application/json";
+    produces: "application/json";
+};
+
+message Empty {}
+
+message Project {
+  string name = 1;
+  string repository = 2; 
+}
+
+message SyncMessage {
+  string name = 1;
+}
+
+message GetAllMessage {
+  repeated Project projects = 1;
+}
+
+
+service Projects {
+    rpc Sync(SyncMessage) returns (Empty) {
+      option (google.api.http) = {
+        get: "/api/v1/projects/sync/{name}"
+      };
+    }
+
+    rpc GetAll(Empty) returns (GetAllMessage){
+        option (google.api.http) = {
+            get: "/api/v1/projects/all"
+        };
+    };
+  }

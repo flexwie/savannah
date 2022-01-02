@@ -1,7 +1,7 @@
 package router
 
 import (
-	"felixwie.com/savannah/router/routes"
+	"felixwie.com/savannah/api/routes"
 	"github.com/gorilla/mux"
 )
 
@@ -11,8 +11,6 @@ func init() {
 	router = mux.NewRouter()
 
 	router.HandleFunc("/webhook/github/{id}", routes.ReceiveGithubWebhook)
-	router.HandleFunc("/api/sync", routes.SyncRepository)
-	router.HandleFunc("/api/repositories", routes.GetRepositories)
 }
 
 func GetRouter() *mux.Router {

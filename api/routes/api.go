@@ -46,13 +46,3 @@ func SyncRepository(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 }
-
-func GetRepositories(w http.ResponseWriter, r *http.Request) {
-	data, err := json.Marshal(Cfg.Source)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(data)
-}

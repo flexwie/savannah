@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"felixwie.com/savannah/router"
+	router "felixwie.com/savannah/api"
 	"github.com/stretchr/testify/assert"
 )
 
