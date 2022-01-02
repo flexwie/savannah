@@ -2,3 +2,5 @@ savannah
 nomader
 **/*-packr.go
 config.hcl
+docs
+internal
