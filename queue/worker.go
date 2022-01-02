@@ -18,6 +18,14 @@ type WebhookJob struct {
 	Folder     string
 }
 
+type PollingJob struct {
+	ID         string
+	Repository string
+	Branch     string
+	Folder     string
+	Interval   int
+}
+
 func (t *WebhookJob) Process() {
 	log.Printf("Processing incoming request: %s\n", t.ID)
 
@@ -25,6 +33,10 @@ func (t *WebhookJob) Process() {
 	walkDir(t.ID + "/" + t.Folder)
 
 	defer os.RemoveAll(t.ID)
+}
+
+func (p *PollingJob) Process() {
+	log.Printf("polling something for %s", p.ID)
 }
 
 func getContent(url string, id string) {

@@ -17,10 +17,15 @@ type Config struct {
 }
 
 type Source struct {
-	Name   string `hcl:"name" json:"name"`
-	Branch string `hcl:"branch" json:"branch"`
-	Folder string `hcl:"folder" json:"folder"`
-	URL    string `hcl:"url" json:"url"`
+	Name    string   `hcl:"name" json:"name"`
+	Branch  string   `hcl:"branch" json:"branch"`
+	Folder  string   `hcl:"folder" json:"folder"`
+	URL     string   `hcl:"url" json:"url"`
+	Polling *Polling `hcl:"polling,block" json:"polling"`
+}
+
+type Polling struct {
+	Interval int `hcl:"interval" json:"interval"`
 }
 
 var cfg Config

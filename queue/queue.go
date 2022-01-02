@@ -1,8 +1,12 @@
 package queue
 
 import (
-	"runtime"
+	"log"
 	"sync"
+	"time"
+
+	"felixwie.com/savannah/config"
+	"github.com/google/uuid"
 )
 
 type Job interface {
@@ -28,9 +32,25 @@ type JobQueue struct {
 }
 
 var queue *JobQueue
+var scheduler Scheduler
 
 func init() {
-	queue = NewJobQueue(runtime.NumCPU())
+	queue = NewJobQueue(1)
+	scheduler = Scheduler{}
+
+	cfg := config.GetConfig().Source
+
+	for _, s := range cfg {
+		if s.Polling != nil {
+			log.Printf("adding polling worker for %s", s.Name)
+			scheduler.Every(&PollingJob{
+				ID:         uuid.NewString(),
+				Repository: s.URL,
+				Branch:     s.Branch,
+				Folder:     s.Folder,
+			}, time.Duration(s.Polling.Interval)*time.Second)
+		}
+	}
 }
 
 func GetQueue() *JobQueue {
