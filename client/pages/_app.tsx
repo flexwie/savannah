@@ -3,9 +3,9 @@ import type { AppProps } from 'next/app'
 import { useEffect } from 'react';
 
 function MyApp({ Component, pageProps }: AppProps) {
-  useEffect(() => {
-    import('bootstrap/dist/js/bootstrap');
-  }, [])
+  // useEffect(() => {
+  //   import('bootstrap/dist/js/bootstrap') as any
+  // }, [])
 
   return <Component {...pageProps} />
 }

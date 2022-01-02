@@ -7,7 +7,7 @@ const Home: NextPage = () => {
   const [projects, setProjects] = useState<any[]>([])
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/repositories")
+    fetch("http://localhost:8080/api/v1/projects/all").then((res) => res.json()).then(res => setProjects(res.projects))
   }, [])
 
   return (
@@ -15,7 +15,7 @@ const Home: NextPage = () => {
       <Container>
         <Row>
           <Col>
-            <h1>Savannah</h1>
+            <h1>Savannah 3</h1>
           </Col>
         </Row>
         <Row>
